@@ -2,11 +2,7 @@ package com.yatsenko.simpleplayer.player.abstraction
 
 abstract class PlaybackInfoListener {
 
-    enum class State {INVALID,
-             PLAYING,
-             PAUSED,
-             RESET,
-            COMPLETED }
+    enum class State {INVALID, PLAYING, PAUSED, RESET, COMPLETED }
 
     fun convertStateToString(state: State): String {
         val stateString: String
@@ -20,8 +16,6 @@ abstract class PlaybackInfoListener {
         }
         return stateString
     }
-
-    internal fun onLogUpdated(formattedMessage: String) {}
 
     internal open fun onDurationChanged(duration: Int) {}
 

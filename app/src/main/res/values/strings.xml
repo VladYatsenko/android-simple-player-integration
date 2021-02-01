@@ -4,4 +4,6 @@
     <string name="msg_playback_ended">playback ended</string>
     <string name="msg_playback_started">playback started</string>
     <string name="msg_playback_paused">playback paused</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

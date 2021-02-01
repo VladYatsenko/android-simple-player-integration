@@ -1,28 +1,27 @@
 package com.yatsenko.simpleplayer.player.abstraction
 
-import android.net.Uri
 import android.view.View
+import com.yatsenko.simpleplayer.player.abstraction.model.MediaResource
 
 interface PlayerAdapter {
 
-//    var playerView: T
+    // Prepare playback.
+    fun loadMedia(resource: MediaResource)
 
-    fun loadMedia(uri: Uri)
-
+    // Destroy the player instance.
     fun release()
 
     fun isPlaying(): Boolean
 
     fun play()
 
-    fun reset()
+    // Stop playback and release resources, but re-use the player instance.
+    fun stop()
 
     fun pause()
 
-    fun initializeProgressCallback()
+//    fun initializeProgressCallback()
 
     fun seekTo(position: Int)
-
-//    fun <T> setPlayerView(view: T)
 
 }

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.example.android.videoplayersample
+package com.yatsenko.simpleplayer.player.google
 
 import android.content.Context
 import android.media.AudioManager
 import android.net.Uri
-import android.support.v4.media.AudioAttributesCompat
+import androidx.media.AudioAttributesCompat
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ExoPlayerFactory
@@ -30,11 +30,6 @@ import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.yatsenko.simpleplayer.player.google.AudioFocusWrapper
-import com.yatsenko.simpleplayer.player.google.mediaCatalog
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.toast
 
 /**
  * Creates and manages a [com.google.android.exoplayer2.ExoPlayer] instance.
@@ -46,7 +41,7 @@ data class PlayerState(var window: Int = 0,
 
 class PlayerHolder(private val context: Context,
                    private val playerState: PlayerState,
-                   private val playerView: PlayerView) : AnkoLogger {
+                   private val playerView: PlayerView) {
     val audioFocusPlayer: ExoPlayer
 
     // Create the player instance.
@@ -62,7 +57,7 @@ class PlayerHolder(private val context: Context,
                 ExoPlayerFactory.newSimpleInstance(context, DefaultTrackSelector())
                         .also { playerView.player = it }
         )
-        info { "SimpleExoPlayer created" }
+//        info { "SimpleExoPlayer created" }
     }
 
     private fun buildMediaSource(): MediaSource {
@@ -92,7 +87,7 @@ class PlayerHolder(private val context: Context,
             // Add logging.
             attachLogging(audioFocusPlayer)
         }
-        info { "SimpleExoPlayer is started" }
+//        info { "SimpleExoPlayer is started" }
     }
 
     // Stop playback and release resources, but re-use the player instance.
@@ -107,13 +102,13 @@ class PlayerHolder(private val context: Context,
             // Stop the player (and release it's resources). The player instance can be reused.
             stop(true)
         }
-        info { "SimpleExoPlayer is stopped" }
+//        info { "SimpleExoPlayer is stopped" }
     }
 
     // Destroy the player instance.
     fun release() {
         audioFocusPlayer.release() // player instance can't be used again.
-        info { "SimpleExoPlayer is released" }
+//        info { "SimpleExoPlayer is released" }
     }
 
     /**
@@ -126,14 +121,14 @@ class PlayerHolder(private val context: Context,
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 when (playbackState) {
                     Player.STATE_ENDED -> {
-                        context.toast(R.string.msg_playback_ended)
+//                        context.toast(R.string.msg_playback_ended)
                     }
                     Player.STATE_READY -> when (playWhenReady) {
                         true -> {
-                            context.toast(R.string.msg_playback_started)
+//                            context.toast(R.string.msg_playback_started)
                         }
                         false -> {
-                            context.toast(R.string.msg_playback_paused)
+//                            context.toast(R.string.msg_playback_paused)
                         }
                     }
                 }
@@ -142,11 +137,11 @@ class PlayerHolder(private val context: Context,
         // Write to log on state changes.
         exoPlayer.addListener(object : Player.DefaultEventListener() {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                info { "playerStateChanged: ${getStateString(playbackState)}, $playWhenReady" }
+//                info { "playerStateChanged: ${getStateString(playbackState)}, $playWhenReady" }
             }
 
-            override fun onPlayerError(error: ExoPlaybackException?) {
-                info { "playerError: $error" }
+            override fun onPlayerError(error: ExoPlaybackException) {
+//                info { "playerError: $error" }
             }
 
             fun getStateString(state: Int): String {

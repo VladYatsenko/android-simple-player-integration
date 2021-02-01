@@ -2,13 +2,15 @@ package com.yatsenko.simpleplayer.player.mediaplayer
 
 import android.content.Context
 import android.media.MediaPlayer
-import android.net.Uri
 import android.util.Log
-import android.view.View
+import com.yatsenko.simpleplayer.player.abstraction.model.MediaResource
 import com.yatsenko.simpleplayer.player.abstraction.PlaybackInfoListener
 import com.yatsenko.simpleplayer.player.abstraction.PlayerAdapter
-import java.util.concurrent.TimeUnit
 
+/**
+ * Player for audio
+ *
+ * */
 class MediaPlayerHolder constructor(val context: Context) : PlayerAdapter {
 
     private var mediaPlayer: MediaPlayer? = null
@@ -18,7 +20,7 @@ class MediaPlayerHolder constructor(val context: Context) : PlayerAdapter {
         if (mediaPlayer == null) {
             mediaPlayer = MediaPlayer()
             mediaPlayer?.setOnCompletionListener {
-                stopUpdatingCallbackWithPosition(true)
+//                stopUpdatingCallbackWithPosition(true)
                 playbackInfoListener?.onStateChanged(PlaybackInfoListener.State.COMPLETED)
                 playbackInfoListener?.onPlaybackCompleted()
             }
@@ -29,12 +31,12 @@ class MediaPlayerHolder constructor(val context: Context) : PlayerAdapter {
         playbackInfoListener = listener
     }
 
-    override fun loadMedia(uri: Uri) {
+    override fun loadMedia(resource: MediaResource) {
 
         initializeMediaPlayer()
 
         try {
-            mediaPlayer?.setDataSource(context, uri)
+            mediaPlayer?.setDataSource(resource.getMediaResourceSource())
         } catch (e: Exception) {
 //            Logger.crashlyticsLog(e)
         }
@@ -61,20 +63,17 @@ class MediaPlayerHolder constructor(val context: Context) : PlayerAdapter {
     override fun play() {
         if (mediaPlayer != null && mediaPlayer?.isPlaying != true) {
             mediaPlayer?.start()
-            if (playbackInfoListener != null) {
-                playbackInfoListener?.onStateChanged(PlaybackInfoListener.State.PLAYING)
-            }
-            startUpdatingCallbackWithPosition()
+            playbackInfoListener?.onStateChanged(PlaybackInfoListener.State.PLAYING)
+
+//            startUpdatingCallbackWithPosition()
         }
     }
 
-    override fun reset() {
+    override fun stop() {
         if (mediaPlayer != null) {
             mediaPlayer?.reset()
-
             playbackInfoListener?.onStateChanged(PlaybackInfoListener.State.RESET)
-
-            stopUpdatingCallbackWithPosition(true)
+//            stopUpdatingCallbackWithPosition(true)
         }
     }
 
@@ -91,16 +90,16 @@ class MediaPlayerHolder constructor(val context: Context) : PlayerAdapter {
         mediaPlayer?.seekTo(position)
     }
 
-    private fun startUpdatingCallbackWithPosition() {
-        compositeDisposable = Observable.interval(10L, TimeUnit.MILLISECONDS)
-            .timeInterval()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { updateProgressCallbackTask() }
-    }
-
-    private fun stopUpdatingCallbackWithPosition(resetUIPlaybackPosition: Boolean) {
-        compositeDisposable.dispose()
-    }
+//    private fun startUpdatingCallbackWithPosition() {
+//        compositeDisposable = Observable.interval(10L, TimeUnit.MILLISECONDS)
+//            .timeInterval()
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe { updateProgressCallbackTask() }
+//    }
+//
+//    private fun stopUpdatingCallbackWithPosition(resetUIPlaybackPosition: Boolean) {
+//        compositeDisposable.dispose()
+//    }
 
     private fun updateProgressCallbackTask() {
         if (mediaPlayer?.isPlaying == true) {
@@ -109,7 +108,7 @@ class MediaPlayerHolder constructor(val context: Context) : PlayerAdapter {
         }
     }
 
-    override fun initializeProgressCallback() {
+    private fun initializeProgressCallback() {
         val duration = mediaPlayer?.duration ?: 0
         playbackInfoListener?.onDurationChanged(duration)
         playbackInfoListener?.onPositionChanged(0)
